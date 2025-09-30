@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import ThemeToggle from './ThemeToggle';
+import ParticleNetwork from './ParticleNetwork';
 
 interface LandingPageProps {
   onGetStarted: () => void;
@@ -46,18 +46,9 @@ export default function LandingPage({ onGetStarted, onViewSampleData }: LandingP
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 relative overflow-hidden transition-colors duration-300">
-      {/* Moving background elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none background-elements">
-        <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-blue-200 rounded-full opacity-20 animate-float-up"></div>
-        <div className="absolute top-1/3 right-1/4 w-24 h-24 bg-purple-200 rounded-full opacity-20 animate-float-down" style={{ animationDelay: '5s' }}></div>
-        <div className="absolute top-2/3 left-1/3 w-16 h-16 bg-indigo-200 rounded-full opacity-20 animate-drift" style={{ animationDelay: '10s' }}></div>
-        <div className="absolute top-1/2 right-1/3 w-20 h-20 bg-pink-200 rounded-full opacity-20 animate-float-up" style={{ animationDelay: '15s' }}></div>
-        <div className="absolute bottom-1/4 left-1/2 w-28 h-28 bg-cyan-200 rounded-full opacity-20 animate-float-down" style={{ animationDelay: '8s' }}></div>
-        <div className="absolute top-3/4 right-1/2 w-12 h-12 bg-emerald-200 rounded-full opacity-20 animate-drift" style={{ animationDelay: '12s' }}></div>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 relative">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50 content-layer">
+      <header className="bg-white/95 backdrop-blur-md border-b border-gray-200/50 sticky top-0 z-50 content-layer shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-2">
@@ -67,13 +58,32 @@ export default function LandingPage({ onGetStarted, onViewSampleData }: LandingP
               <h1 className="text-lg sm:text-xl font-bold text-gray-900">Datuum</h1>
             </div>
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-4">
-              <a href="#features" className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors">Features</a>
-              <a href="#how-it-works" className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors">How it Works</a>
-              <ThemeToggle />
+            <div className="hidden md:flex items-center space-x-6">
+              <a 
+                href="#features" 
+                className="text-gray-600 hover:text-blue-600  transition-colors duration-200 font-medium relative group"
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+              >
+                Features
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600  transition-all duration-200 group-hover:w-full"></span>
+              </a>
+              <a 
+                href="#how-it-works" 
+                className="text-gray-600 hover:text-blue-600  transition-colors duration-200 font-medium relative group"
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+              >
+                How it Works
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600  transition-all duration-200 group-hover:w-full"></span>
+              </a>
               <button
                 onClick={onGetStarted}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors hover-lift btn-enhanced"
+                className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 hover-lift btn-enhanced shadow-lg"
               >
                 Get Started
               </button>
@@ -95,17 +105,36 @@ export default function LandingPage({ onGetStarted, onViewSampleData }: LandingP
           </div>
           {/* Mobile Navigation Menu */}
           {mobileMenuOpen && (
-            <div className="md:hidden border-t border-gray-200 dark:border-gray-700 py-4">
+            <div className="md:hidden border-t border-gray-200  py-4">
               <div className="flex flex-col space-y-3">
-                <a href="#features" className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors px-2 py-1">Features</a>
-                <a href="#how-it-works" className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors px-2 py-1">How it Works</a>
-                <div className="flex items-center space-x-2 px-2 py-1">
-                  <span className="text-gray-600 dark:text-gray-300 text-sm">Theme:</span>
-                  <ThemeToggle />
-                </div>
+                <a 
+                  href="#features" 
+                  className="text-gray-600 hover:text-blue-600  transition-colors px-2 py-1 font-medium"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' });
+                    setMobileMenuOpen(false);
+                  }}
+                >
+                  Features
+                </a>
+                <a 
+                  href="#how-it-works" 
+                  className="text-gray-600 hover:text-blue-600  transition-colors px-2 py-1 font-medium"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
+                    setMobileMenuOpen(false);
+                  }}
+                >
+                  How it Works
+                </a>
                 <button
-                  onClick={onGetStarted}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-left w-fit hover-lift"
+                  onClick={() => {
+                    onGetStarted();
+                    setMobileMenuOpen(false);
+                  }}
+                  className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 text-left w-fit hover-lift shadow-lg"
                 >
                   Get Started
                 </button>
@@ -117,15 +146,18 @@ export default function LandingPage({ onGetStarted, onViewSampleData }: LandingP
 
       {/* Hero Section */}
       <section className="relative py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 overflow-hidden content-layer">
+        {/* Particle Network Background - Hero Section Only */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none background-elements">
+          <ParticleNetwork />
+        </div>
         <div className="max-w-7xl mx-auto">
           <div className="text-center">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6 animate-fade-in-up leading-tight">
-              Transform Your Data Into
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900  mb-4 sm:mb-6 animate-fade-in-up leading-tight">
               <span className="block sm:inline gradient-text-animated">
-                {' '}Beautiful Charts
+                Visualize fast. Decide faster.
               </span>
             </h1>
-            <p className="text-base sm:text-lg lg:text-xl text-gray-600 dark:text-gray-300 mb-6 sm:mb-8 max-w-3xl mx-auto animate-fade-in-up animation-delay-200 px-2">
+            <p className="text-base sm:text-lg lg:text-xl text-gray-600  mb-6 sm:mb-8 max-w-3xl mx-auto animate-fade-in-up animation-delay-200 px-2">
               Create stunning, interactive visualizations from your CSV data in seconds. 
               No coding, no backend, no hassle - just upload, customize, and export.
             </p>
@@ -140,7 +172,7 @@ export default function LandingPage({ onGetStarted, onViewSampleData }: LandingP
               </button>
               <button 
                 onClick={onViewSampleData}
-                className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 text-base sm:text-lg font-semibold rounded-xl hover:border-gray-400 dark:hover:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200 hover-lift"
+                className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 border-2 border-gray-300  text-gray-700  text-base sm:text-lg font-semibold rounded-xl hover:border-gray-400  hover:bg-gray-50  transition-all duration-200 hover-lift"
               >
                 View Sample Data
               </button>
@@ -150,7 +182,13 @@ export default function LandingPage({ onGetStarted, onViewSampleData }: LandingP
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-12 sm:py-16 lg:py-20 bg-white content-layer">
+      <section id="features" className="py-12 sm:py-16 lg:py-20 bg-white content-layer relative overflow-hidden">
+        {/* Subtle background animation */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-blue-100 rounded-full opacity-30 animate-float-up"></div>
+          <div className="absolute top-1/3 right-1/4 w-24 h-24 bg-purple-100 rounded-full opacity-30 animate-float-down" style={{ animationDelay: '5s' }}></div>
+          <div className="absolute top-2/3 left-1/3 w-16 h-16 bg-indigo-100 rounded-full opacity-30 animate-drift" style={{ animationDelay: '10s' }}></div>
+        </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12 sm:mb-16">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -184,7 +222,13 @@ export default function LandingPage({ onGetStarted, onViewSampleData }: LandingP
       </section>
 
       {/* How It Works Section */}
-      <section id="how-it-works" className="py-12 sm:py-16 lg:py-20 bg-gray-50 content-layer">
+      <section id="how-it-works" className="py-12 sm:py-16 lg:py-20 bg-gray-50 content-layer relative overflow-hidden">
+        {/* Subtle background animation */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-1/2 right-1/4 w-20 h-20 bg-cyan-100 rounded-full opacity-25 animate-float-up" style={{ animationDelay: '3s' }}></div>
+          <div className="absolute bottom-1/4 left-1/4 w-28 h-28 bg-emerald-100 rounded-full opacity-25 animate-float-down" style={{ animationDelay: '8s' }}></div>
+          <div className="absolute top-1/4 right-1/2 w-12 h-12 bg-pink-100 rounded-full opacity-25 animate-drift" style={{ animationDelay: '12s' }}></div>
+        </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12 sm:mb-16">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -236,7 +280,7 @@ export default function LandingPage({ onGetStarted, onViewSampleData }: LandingP
             Ready to Create Beautiful Charts?
           </h2>
           <p className="text-base sm:text-lg lg:text-xl text-blue-100 mb-6 sm:mb-8 px-4">
-            Join thousands of users who trust Datuum for their data visualization needs.
+            Join multiple users who trust Datuum for their data visualization needs.
           </p>
           <button
             onClick={onGetStarted}

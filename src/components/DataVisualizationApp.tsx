@@ -8,7 +8,6 @@ import DataTable from '@/components/DataTable';
 import ChartRenderer from '@/components/ChartRenderer';
 import ChartControls from '@/components/ChartControls';
 import ExportControls from '@/components/ExportControls';
-import ThemeToggle from '@/components/ThemeToggle';
 import ErrorWithSuggestions from '@/components/ErrorWithSuggestions';
 
 interface DataVisualizationAppProps {
@@ -59,33 +58,32 @@ export default function DataVisualizationApp({ onBackToLanding }: DataVisualizat
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-white dark:bg-gray-800 shadow-sm border-b dark:border-gray-700">
+      <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-4">
               <button
                 onClick={onBackToLanding}
-                className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors hover-lift"
+                className="flex items-center space-x-2 text-gray-600 hover:text-gray-900   transition-colors hover-lift"
               >
                 <span>←</span>
                 <span>Back to Home</span>
               </button>
-              <div className="w-px h-6 bg-gray-300 dark:bg-gray-600"></div>
+              <div className="w-px h-6 bg-gray-300 "></div>
               <div className="flex items-center space-x-2">
                 <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center animate-pulse-glow shadow-lg hover-glow transition-all duration-300">
                   <span className="text-white font-bold text-sm">📊</span>
                 </div>
-                <h1 className="text-xl font-bold text-gray-900 dark:text-white">Data Visualization Tool</h1>
+                <h1 className="text-xl font-bold text-gray-900 ">Data Visualization Tool</h1>
               </div>
             </div>
             <div className="flex items-center space-x-3">
-              <ThemeToggle />
               {parsedData && (
                 <button
                   onClick={resetApp}
-                  className="px-4 py-2 text-sm text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 hover-lift"
+                  className="px-4 py-2 text-sm text-gray-600 hover:text-gray-900   border border-gray-300  rounded-md hover:bg-gray-50  hover-lift"
                 >
                   Start Over
                 </button>
@@ -108,10 +106,10 @@ export default function DataVisualizationApp({ onBackToLanding }: DataVisualizat
           // Upload Section
           <div className="text-center">
             <div className="mb-8">
-              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+              <h2 className="text-3xl font-bold text-gray-900  mb-4">
                 Create Beautiful Charts from Your Data
               </h2>
-              <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+              <p className="text-lg text-gray-600  max-w-2xl mx-auto">
                 Upload a CSV file or enter data manually to generate interactive charts instantly. 
                 No backend required - everything runs in your browser.
               </p>
@@ -122,14 +120,14 @@ export default function DataVisualizationApp({ onBackToLanding }: DataVisualizat
           // Data and Chart Section
           <div className="space-y-8">
             {/* Tab Navigation */}
-            <div className="border-b border-gray-200 dark:border-gray-700">
+            <div className="border-b border-gray-200 ">
               <nav className="-mb-px flex space-x-8">
                 <button
                   onClick={() => setActiveTab('data')}
                   className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
                     activeTab === 'data'
-                      ? 'border-blue-500 text-blue-600 dark:text-blue-400'
-                      : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
+                      ? 'border-blue-500 text-blue-600 '
+                      : 'border-transparent text-gray-500  hover:text-gray-700  hover:border-gray-300 '
                   }`}
                 >
                   Data Table
@@ -138,8 +136,8 @@ export default function DataVisualizationApp({ onBackToLanding }: DataVisualizat
                   onClick={() => setActiveTab('chart')}
                   className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
                     activeTab === 'chart'
-                      ? 'border-blue-500 text-blue-600 dark:text-blue-400'
-                      : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
+                      ? 'border-blue-500 text-blue-600 '
+                      : 'border-transparent text-gray-500  hover:text-gray-700  hover:border-gray-300 '
                   }`}
                 >
                   Chart
@@ -156,11 +154,12 @@ export default function DataVisualizationApp({ onBackToLanding }: DataVisualizat
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Chart Controls */}
                 <div className="lg:col-span-1">
-                  <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border dark:border-gray-700 card-enhanced">
+                  <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 card-enhanced">
                     <ChartControls
                       data={parsedData}
                       config={chartConfig}
                       onConfigChange={handleConfigChange}
+                      onDataChange={handleDataChange}
                     />
                   </div>
                 </div>
@@ -173,7 +172,7 @@ export default function DataVisualizationApp({ onBackToLanding }: DataVisualizat
                     onConfigChange={handleConfigChange}
                   />
                   
-                  <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border dark:border-gray-700 card-enhanced">
+                  <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 card-enhanced">
                     <ExportControls
                       chartType={chartConfig.type}
                       chartTitle={chartConfig.title}
@@ -187,9 +186,9 @@ export default function DataVisualizationApp({ onBackToLanding }: DataVisualizat
       </main>
 
       {/* Footer */}
-      <footer className="bg-white dark:bg-gray-800 border-t dark:border-gray-700 mt-16">
+      <footer className="bg-white  border-t  mt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="text-center text-sm text-gray-500 dark:text-gray-400">
+          <div className="text-center text-sm text-gray-500 ">
             <p>Built with Next.js, Chart.js, and Tailwind CSS</p>
             <p className="mt-1">No backend required - everything runs in your browser</p>
           </div>
