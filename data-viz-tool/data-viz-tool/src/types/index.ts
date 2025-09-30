@@ -8,18 +8,13 @@ export interface ParsedData {
   headers: string[];
 }
 
-export interface SortConfig {
-  column: string;
-  direction: 'asc' | 'desc';
-}
-
 export interface ColumnInfo {
   name: string;
   type: 'numeric' | 'categorical' | 'date';
   index: number;
 }
 
-export type ChartType = 'bar' | 'line' | 'pie' | 'scatter' | 'doughnut' | 'polarArea' | 'radar' | 'bubble';
+export type ChartType = 'bar' | 'line' | 'pie' | 'scatter';
 
 export interface ChartConfig {
   type: ChartType;
