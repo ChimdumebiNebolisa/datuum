@@ -6,17 +6,9 @@ import {
   CategoryScale,
   LinearScale,
   BarElement,
-  BarController,
   LineElement,
-  LineController,
   PointElement,
   ArcElement,
-  PieController,
-  DoughnutController,
-  PolarAreaController,
-  RadarController,
-  ScatterController,
-  BubbleController,
   Title,
   Tooltip,
   Legend,
@@ -29,17 +21,9 @@ ChartJS.register(
   CategoryScale,
   LinearScale,
   BarElement,
-  BarController,
   LineElement,
-  LineController,
   PointElement,
   ArcElement,
-  PieController,
-  DoughnutController,
-  PolarAreaController,
-  RadarController,
-  ScatterController,
-  BubbleController,
   Title,
   Tooltip,
   Legend
@@ -75,15 +59,8 @@ export default function ChartRenderer({ data, config }: ChartRendererProps) {
     }
 
     // Create new chart
-    const chartType = config.type === 'pie' ? 'pie' : 
-                     config.type === 'doughnut' ? 'doughnut' :
-                     config.type === 'polarArea' ? 'polarArea' :
-                     config.type === 'radar' ? 'radar' :
-                     config.type === 'bubble' ? 'bubble' :
-                     config.type === 'scatter' ? 'scatter' : config.type;
-    
     chartInstanceRef.current = new ChartJS(ctx, {
-      type: chartType,
+      type: config.type === 'pie' ? 'pie' : config.type === 'scatter' ? 'scatter' : config.type,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       data: chartData as any,
       options: {

@@ -1,5 +1,5 @@
 import Papa from 'papaparse';
-import { DataPoint, ParsedData, ColumnInfo, SortConfig } from '@/types';
+import { DataPoint, ParsedData, ColumnInfo } from '@/types';
 
 export function parseCSV(file: File): Promise<ParsedData> {
   return new Promise((resolve, reject) => {
@@ -92,50 +92,5 @@ export function validateCSV(data: ParsedData): { isValid: boolean; errors: strin
   return {
     isValid: errors.length === 0,
     errors,
-  };
-}
-
-export function sortData(data: ParsedData, sortConfig: SortConfig): ParsedData {
-  const { column, direction } = sortConfig;
-  const columnInfo = data.columns.find(col => col.name === column);
-  
-  if (!columnInfo) {
-    return data; // Return original data if column not found
-  }
-
-  const sortedData = [...data.data].sort((a, b) => {
-    const aValue = a[column];
-    const bValue = b[column];
-
-    // Handle null/undefined values
-    if (aValue === null || aValue === undefined || aValue === '') {
-      return direction === 'asc' ? -1 : 1;
-    }
-    if (bValue === null || bValue === undefined || bValue === '') {
-      return direction === 'asc' ? 1 : -1;
-    }
-
-    // Sort based on column type
-    if (columnInfo.type === 'numeric') {
-      const aNum = Number(aValue);
-      const bNum = Number(bValue);
-      return direction === 'asc' ? aNum - bNum : bNum - aNum;
-    } else if (columnInfo.type === 'date') {
-      const aDate = new Date(aValue as string);
-      const bDate = new Date(bValue as string);
-      return direction === 'asc' ? aDate.getTime() - bDate.getTime() : bDate.getTime() - aDate.getTime();
-    } else {
-      // Categorical (string) sorting
-      const aStr = String(aValue).toLowerCase();
-      const bStr = String(bValue).toLowerCase();
-      if (aStr < bStr) return direction === 'asc' ? -1 : 1;
-      if (aStr > bStr) return direction === 'asc' ? 1 : -1;
-      return 0;
-    }
-  });
-
-  return {
-    ...data,
-    data: sortedData,
   };
 }
