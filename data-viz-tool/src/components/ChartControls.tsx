@@ -208,12 +208,6 @@ export default function ChartControls({ data, config, onConfigChange, onDataChan
     }
   };
 
-  const getSortIcon = (columnName: string) => {
-    if (sortConfig?.column !== columnName) {
-      return <span className="text-gray-400">↕️</span>;
-    }
-    return sortConfig.direction === 'asc' ? <span className="text-blue-500">↑</span> : <span className="text-blue-500">↓</span>;
-  };
 
   return (
     <div className="space-y-6">
@@ -501,7 +495,7 @@ export default function ChartControls({ data, config, onConfigChange, onDataChan
               </select>
             </div>
             <div className="space-y-2">
-              {pendingConfig.yAxes.map((axis, index) => (
+              {pendingConfig.yAxes.map((axis) => (
                 <div key={axis.id} className="p-3 bg-gray-50 rounded border border-gray-200">
                   <div className="flex justify-between items-start mb-2">
                     <div className="flex items-center space-x-2">
@@ -563,7 +557,7 @@ export default function ChartControls({ data, config, onConfigChange, onDataChan
               </select>
             </div>
             <div className="space-y-2">
-              {pendingConfig.xAxes.map((axis, index) => (
+              {pendingConfig.xAxes.map((axis) => (
                 <div key={axis.id} className="p-3 bg-gray-50 rounded border border-gray-200">
                   <div className="flex justify-between items-start mb-2">
                     <div className="flex items-center space-x-2">

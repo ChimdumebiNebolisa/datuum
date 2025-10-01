@@ -56,7 +56,7 @@ export default function GlobalHelpButton() {
                 <div className="border-l-4 border-yellow-500 pl-4">
                   <h3 className="font-semibold text-gray-900 mb-2">Step 3: Convert to Multi-Axis</h3>
                   <p className="text-gray-600 text-sm">
-                    Click the blue "Convert to Multi-Axis" button to upgrade from simple single-axis 
+                    Click the blue &quot;Convert to Multi-Axis&quot; button to upgrade from simple single-axis 
                     to powerful multi-axis mode.
                   </p>
                 </div>
@@ -65,7 +65,7 @@ export default function GlobalHelpButton() {
                 <div className="border-l-4 border-purple-500 pl-4">
                   <h3 className="font-semibold text-gray-900 mb-2">Step 4: Add Y-Axes</h3>
                   <p className="text-gray-600 text-sm">
-                    Use "Add Y-Axis" to add more vertical axes. Each Y-axis can be positioned on the 
+                    Use &quot;Add Y-Axis&quot; to add more vertical axes. Each Y-axis can be positioned on the 
                     left or right side with independent scales.
                   </p>
                   <ul className="text-gray-600 text-sm mt-2 space-y-1">
@@ -78,7 +78,7 @@ export default function GlobalHelpButton() {
                 <div className="border-l-4 border-red-500 pl-4">
                   <h3 className="font-semibold text-gray-900 mb-2">Step 5: Add X-Axes (Optional)</h3>
                   <p className="text-gray-600 text-sm">
-                    Use "Add X-Axis" to add horizontal axes on top or bottom. Useful for showing 
+                    Use &quot;Add X-Axis&quot; to add horizontal axes on top or bottom. Useful for showing 
                     different time periods or categories.
                   </p>
                   <ul className="text-gray-600 text-sm mt-2 space-y-1">
@@ -100,7 +100,7 @@ export default function GlobalHelpButton() {
                 <div className="border-l-4 border-pink-500 pl-4">
                   <h3 className="font-semibold text-gray-900 mb-2">Step 7: Visualize</h3>
                   <p className="text-gray-600 text-sm">
-                    Click "Visualize Chart" to apply all changes and see your multi-axis chart. 
+                    Click &quot;Visualize Chart&quot; to apply all changes and see your multi-axis chart. 
                     The system validates your configuration before rendering.
                   </p>
                 </div>

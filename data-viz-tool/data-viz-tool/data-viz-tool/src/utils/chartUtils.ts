@@ -1,4 +1,4 @@
-import { ChartType, ChartConfig, DataPoint, ColumnInfo } from '@/types';
+import { ChartType, ChartConfig, DataPoint, ColumnInfo, AxisConfig, DatasetConfig } from '@/types';
 
 export const CHART_TYPES: { value: ChartType; label: string }[] = [
   { value: 'bar', label: 'Bar Chart' },
@@ -43,12 +43,44 @@ export function createDefaultChartConfig(
     yAxis = numericColumns[0]?.name || columns[1]?.name || '';
   }
 
+  // Create default axes
+  const xAxisConfig: AxisConfig = {
+    id: 'x-axis-1',
+    label: xAxis || 'X Axis',
+    column: xAxis || '',
+    position: 'bottom',
+    type: chartType === 'scatter' ? 'linear' : 'category',
+    display: true,
+  };
+
+  const yAxisConfig: AxisConfig = {
+    id: 'y-axis-1',
+    label: yAxis || 'Y Axis',
+    column: yAxis || '',
+    position: 'left',
+    type: 'linear',
+    display: true,
+  };
+
+  // Create default dataset
+  const datasetConfig: DatasetConfig = {
+    label: yAxis || 'Data',
+    column: yAxis || '',
+    yAxisID: 'y-axis-1',
+    xAxisID: 'x-axis-1',
+    color: DEFAULT_COLORS[0],
+  };
+
   return {
     type: chartType,
     title: `${chartType.charAt(0).toUpperCase() + chartType.slice(1)} Chart`,
+    xAxes: [xAxisConfig],
+    yAxes: [yAxisConfig],
+    datasets: [datasetConfig],
+    colors: [...DEFAULT_COLORS],
+    // Legacy support
     xAxis,
     yAxis,
-    colors: [...DEFAULT_COLORS],
   };
 }
 

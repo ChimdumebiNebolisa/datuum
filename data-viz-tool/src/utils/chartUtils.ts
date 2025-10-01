@@ -134,7 +134,7 @@ export function getChartData(
   }
 
   if (config.type === 'scatter') {
-    const datasets = config.datasets.map((dataset, index) => {
+    const datasets = config.datasets.map((dataset) => {
       const yAxis = config.yAxes.find(axis => axis.id === dataset.yAxisID);
       const xAxis = config.xAxes.find(axis => axis.id === dataset.xAxisID);
       
@@ -373,7 +373,7 @@ export function removeAxis(config: ChartConfig, axisId: string): ChartConfig {
   const isXAxis = config.xAxes.some(axis => axis.id === axisId);
   const isYAxis = config.yAxes.some(axis => axis.id === axisId);
 
-  let newConfig = { ...config };
+  const newConfig = { ...config };
 
   if (isXAxis) {
     newConfig.xAxes = config.xAxes.filter(axis => axis.id !== axisId);

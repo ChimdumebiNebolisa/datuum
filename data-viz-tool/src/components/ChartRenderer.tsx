@@ -22,7 +22,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import { ChartConfig, ParsedData, AxisConfig } from '@/types';
+import { ChartConfig, ParsedData } from '@/types';
 import { getChartData, validateChartConfig } from '@/utils/chartUtils';
 
 // Register Chart.js components
@@ -64,6 +64,7 @@ function buildScalesConfig(config: ChartConfig) {
     return undefined;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const scales: any = {};
 
   // Build X axes
