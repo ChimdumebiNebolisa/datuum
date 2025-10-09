@@ -84,7 +84,7 @@ npm install
 ```bash
 npm run dev
 ```
-4. Open [http://localhost:3000](http://localhost:3000)
+4. Open [here](https://datuum-7uap.vercel.app/)
 
 ---
 
