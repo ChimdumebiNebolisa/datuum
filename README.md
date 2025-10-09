@@ -29,9 +29,6 @@ The Data Visualization Tool empowers users to transform raw CSV data into meanin
 - Customize colors, titles, and labels  
 - Client-side only (no backend)
 
---ACCOMPLISHED "dynamic CSV parsing" THROUGH "stream-based file handling" USING "PapaParse" METHOD--  
---ACCOMPLISHED "instant export" THROUGH "canvas snapshotting" USING "html2canvas + jsPDF" METHOD--
-
 ---
 
 ## 🛠️ Tech Stack
