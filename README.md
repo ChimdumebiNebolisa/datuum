@@ -1,158 +1,179 @@
-# Data Visualization Tool
+# Data Visualization Tool 📊
 
-A lightweight web application that lets users upload CSV files or input data manually to generate beautiful, interactive charts instantly - all in the browser with no backend required.
+A lightweight web application that lets users upload CSV files or input data manually to generate beautiful, interactive charts instantly — all in the browser with no backend required.
 
-## Features
+---
 
-- **CSV Upload**: Drag and drop or click to upload CSV files
-- **Manual Data Entry**: Edit data directly in an interactive table
-- **Multiple Chart Types**: Bar, Line, Pie, and Scatter plots
-- **Interactive Charts**: Powered by Chart.js for smooth interactions
-- **Export Options**: Download charts as PNG, SVG, or PDF
-- **Customization**: Change colors, titles, and axis labels
-- **No Backend**: Everything runs client-side in your browser
+## 🧠 Overview
 
-## Tech Stack
+The Data Visualization Tool empowers users to transform raw CSV data into meaningful insights through instant chart generation, interactivity, and customization — all without server dependencies.  
 
-- **Framework**: Next.js 15 with App Router
-- **Visualization**: Chart.js
-- **Styling**: Tailwind CSS
-- **File Parsing**: PapaParse
-- **Export**: html2canvas + jsPDF
-- **Language**: TypeScript
+--ACCOMPLISHED "real-time visualization" THROUGH "client-only rendering" USING "Next.js App Router and Chart.js" METHOD--
 
-## Getting Started
+---
 
-### Prerequisites
+## YOUR PROJECT README
 
-- Node.js 18+ 
-- npm or yarn
+- Problem: non-technical users often struggle to visualize data without complex tools.  
+- Solution: an intuitive, zero-setup web app for instant CSV-based visualization.  
+- Users: students, analysts, small teams, and educators.  
+- Outcome: faster insight generation and more accessible data storytelling.
 
-### Installation
+---
+
+## 🚀 Features
+
+- CSV Upload and live preview  
+- Manual data editing in interactive tables  
+- Chart Types: Bar, Line, Pie, and Scatter  
+- Fully interactive visuals powered by Chart.js  
+- Export charts as PNG, SVG, or PDF  
+- Customize colors, titles, and labels  
+- Client-side only (no backend)
+
+--ACCOMPLISHED "dynamic CSV parsing" THROUGH "stream-based file handling" USING "PapaParse" METHOD--  
+--ACCOMPLISHED "instant export" THROUGH "canvas snapshotting" USING "html2canvas + jsPDF" METHOD--
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technologies |
+|-------|---------------|
+| Framework | Next.js 15 (App Router) |
+| Visualization | Chart.js |
+| Styling | Tailwind CSS |
+| File Parsing | PapaParse |
+| Export | html2canvas + jsPDF |
+| Language | TypeScript |
+
+---
+
+## 📂 Project Structure
+
+```
+src/
+├── app/                 # Next.js app directory
+│   ├── globals.css      # Global styles
+│   ├── layout.tsx       # Root layout
+│   └── page.tsx         # Main page component
+├── components/          # React components
+│   ├── ChartControls.tsx
+│   ├── ChartRenderer.tsx
+│   ├── DataTable.tsx
+│   ├── ExportControls.tsx
+│   └── FileUpload.tsx
+├── lib/                 # Utility libraries
+├── types/               # TypeScript types
+│   └── index.ts
+└── utils/               # Helper functions
+    ├── chartUtils.ts
+    ├── csvParser.ts
+    └── exportUtils.ts
+```
+
+---
+
+## 🔧 Setup & Installation
 
 1. Clone the repository:
 ```bash
 git clone <repository-url>
 cd data-viz-tool
 ```
-
 2. Install dependencies:
 ```bash
 npm install
 ```
-
 3. Run the development server:
 ```bash
 npm run dev
 ```
+4. Open [http://localhost:3000](http://localhost:3000)
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser.
+---
 
-### Available Scripts
+## RECRUITEMENT GATHERING
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run start` - Start production server
-- `npm run lint` - Run ESLint
-- `npm run format` - Format code with Prettier
-- `npm run format:check` - Check code formatting
+- Gather requirements from small teams and individual users about data visualization needs.  
+- Define must-have features (chart types, CSV handling, export options).  
+- Identify usability constraints (speed, browser memory limits).
 
-## Usage
 
-### Uploading Data
+---
 
-1. **CSV Upload**: Drag and drop a CSV file onto the upload area or click to select
-2. **Manual Entry**: After uploading, you can edit data directly in the table
-3. **Data Validation**: The app automatically detects column types (numeric, categorical, date)
+## ANALYSIS AND DESIGN
 
-### Creating Charts
+- Break down components into data, view, and chart layers.  
+- Map CSV structure to chart schema dynamically.  
+- Define UX flow for upload → table → chart → export.  
+- Optimize layout for both desktop and tablet devices.
 
-1. Switch to the "Chart" tab after uploading data
-2. Choose your chart type (Bar, Line, Pie, Scatter)
-3. Select X and Y axis columns
-4. Customize colors, title, and other settings
-5. Export your chart in multiple formats
+---
 
-### Supported File Formats
+## IMPLEMENTATION
 
-- CSV files up to 5MB
-- UTF-8 encoding
-- Headers in the first row
-- Automatic type detection for columns
+- Built responsive UI with Next.js and Tailwind CSS.  
+- Added CSV parsing pipeline via PapaParse.  
+- Rendered charts dynamically using Chart.js.  
+- Integrated export utilities for PNG/SVG/PDF downloads.
 
-## Project Structure
+---
 
-```
-src/
-├── app/                 # Next.js app directory
-│   ├── globals.css     # Global styles
-│   ├── layout.tsx      # Root layout
-│   └── page.tsx        # Main page component
-├── components/         # React components
-│   ├── ChartControls.tsx
-│   ├── ChartRenderer.tsx
-│   ├── DataTable.tsx
-│   ├── ExportControls.tsx
-│   └── FileUpload.tsx
-├── lib/               # Library code
-├── types/             # TypeScript type definitions
-│   └── index.ts
-└── utils/             # Utility functions
-    ├── chartUtils.ts
-    ├── csvParser.ts
-    └── exportUtils.ts
-```
+## TESTING
 
-## Deployment
+- Unit tests for utils (CSV parsing, export logic).  
+- Manual QA for multi-browser consistency.  
+- Performance profiling for large CSVs (5MB+).  
+- Accessibility checks with keyboard navigation and ARIA labels.
 
-### Vercel (Recommended)
+---
 
-1. Push your code to GitHub
-2. Connect your repository to Vercel
-3. Deploy automatically
+## DEPLOYMENT
 
-### Other Platforms
+- Deployed frontend directly on Vercel for serverless hosting.  
+- Automatic builds on push to main branch.  
+- Continuous integration via GitHub Actions.  
+- Environment variable configuration through `.env.local`.
 
-The app can be deployed to any static hosting service:
+---
 
-```bash
-npm run build
-# Deploy the 'out' directory
-```
+## MAINTENANCE
 
-## Known Limitations
+- Track errors via browser console reports.  
+- Schedule dependency upgrades quarterly.  
+- Plan for user feedback via GitHub Issues.  
+- Maintain code formatting and linting standards.
 
-- Maximum file size: 5MB
-- No persistent data storage (session-based only)
-- No user authentication
-- Limited to basic chart types
-- Performance may degrade with very large datasets (>10k rows)
+---
 
-## Contributing
+## 📈 Roadmap
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Run tests and linting
-5. Submit a pull request
+- Add more chart types (Heatmap, Radar, Bubble)  
+- Enable data persistence with IndexedDB  
+- Add custom themes and templates  
+- Real-time collaboration mode  
+- API integrations for live data sources
 
-## License
+---
 
-MIT License - see LICENSE file for details
+## 🤝 Contributing
 
-## Roadmap
+1. Fork the repository  
+2. Create a feature branch (`git checkout -b feature/awesome-update`)  
+3. Commit changes (`git commit -m "Add new feature"`)  
+4. Push to your branch  
+5. Submit a Pull Request  
 
-Future features to consider:
-- More chart types (heatmaps, radar charts)
-- Data persistence with IndexedDB
-- Template themes
-- Advanced data filtering
-- Real-time collaboration
-- API integration for data sources
+---
 
-## Support
+## 📝 License
 
-For issues and questions:
-- Check the GitHub Issues page
-- Review the documentation
-- Create a new issue with detailed information
+This project is licensed under the **MIT License** — see the LICENSE file for details.
+
+---
+
+## 🙏 Acknowledgments
+
+- Inspired by lightweight open-source chart builders  
+- Built with love for clarity, simplicity, and accessibility  
