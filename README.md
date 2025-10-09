@@ -8,8 +8,6 @@ A lightweight web application that lets users upload CSV files or input data man
 
 The Data Visualization Tool empowers users to transform raw CSV data into meaningful insights through instant chart generation, interactivity, and customization — all without server dependencies.  
 
---ACCOMPLISHED "real-time visualization" THROUGH "client-only rendering" USING "Next.js App Router and Chart.js" METHOD--
-
 ---
 
 ## YOUR PROJECT README
