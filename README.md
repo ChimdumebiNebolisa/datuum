@@ -10,7 +10,7 @@ The Data Visualization Tool empowers users to transform raw CSV data into meanin
 
 ---
 
-## YOUR PROJECT README
+## MY PROJECT README
 
 - Problem: non-technical users often struggle to visualize data without complex tools.  
 - Solution: an intuitive, zero-setup web app for instant CSV-based visualization.  
