@@ -5,7 +5,9 @@ import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
+  LogarithmicScale,
   TimeScale,
+  RadialLinearScale,
   BarElement,
   BarController,
   LineElement,
@@ -30,7 +32,9 @@ import { getChartData, applyFilters, validateChartConfig } from '@/utils/chartUt
 ChartJS.register(
   CategoryScale,
   LinearScale,
+  LogarithmicScale,
   TimeScale,
+  RadialLinearScale, // required for radar and polarArea charts
   BarElement, BarController,
   LineElement, LineController,
   PointElement,
@@ -56,7 +60,12 @@ function buildAxisTitle(label: string, unit?: string): string {
 type ScaleConfig = Record<string, any>;
 
 function buildScales(config: ChartConfig): ScaleConfig | undefined {
-  if (config.type === 'pie' || config.type === 'doughnut' || config.type === 'polarArea') {
+  if (
+    config.type === 'pie' ||
+    config.type === 'doughnut' ||
+    config.type === 'polarArea' ||
+    config.type === 'radar'
+  ) {
     return undefined;
   }
 
