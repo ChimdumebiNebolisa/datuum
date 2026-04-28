@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import ParticleNetwork from './ParticleNetwork';
+import ParticleNetwork from './ui/ParticleNetwork';
 
 interface LandingPageProps {
   onGetStarted: () => void;
@@ -14,34 +14,34 @@ export default function LandingPage({ onGetStarted, onViewSampleData }: LandingP
 
   const features = [
     {
-      icon: '📊',
-      title: 'Upload CSV Files',
-      description: 'Drag and drop your CSV files or click to browse. Supports files up to 5MB with automatic data validation.'
+      icon: '📂',
+      title: 'CSV & Excel Upload',
+      description: 'Upload .csv, .xlsx, or .xls files. Multi-sheet Excel workbooks are supported — choose your sheet before import.'
     },
     {
-      icon: '✏️',
-      title: 'Edit Data Manually',
-      description: 'Add, edit, or delete rows directly in an interactive table. Perfect for quick data entry and corrections.'
+      icon: '🗺️',
+      title: 'Column Role Mapping',
+      description: 'Assign roles to each column: X-Axis, Value Series, Reference Lower/Upper, Label, or Ignore. Smart defaults applied automatically.'
     },
     {
       icon: '📈',
-      title: 'Multiple Chart Types',
-      description: 'Create bar charts, line graphs, pie charts, and scatter plots. Switch between chart types instantly.'
+      title: 'Reference Range Overlays',
+      description: 'Shade the normal range band behind your data lines. Ideal for lab values, sensor limits, or quality thresholds.'
     },
     {
-      icon: '🎨',
-      title: 'Customize Everything',
-      description: 'Change colors, titles, axis labels, and more. Make your charts match your brand or presentation style.'
+      icon: '🎛️',
+      title: 'Filters & Units',
+      description: 'Filter by date range, value range, or category. Attach unit labels (ng/dL, mIU/L) to axes and tooltips.'
     },
     {
       icon: '💾',
-      title: 'Export & Share',
-      description: 'Download your charts as PNG, SVG, or PDF files. Perfect for presentations, reports, and sharing.'
+      title: 'Export PNG, SVG, PDF',
+      description: 'Download publication-ready charts. No watermarks, no account required, no data sent to any server.'
     },
     {
-      icon: '🚀',
-      title: 'No Backend Required',
-      description: 'Everything runs in your browser. Your data never leaves your device - complete privacy and security.'
+      icon: '🔒',
+      title: 'Fully Browser-Side',
+      description: 'Everything runs in your browser. Your data never leaves your device — no backend, no AI, no tracking.'
     }
   ];
 
@@ -154,12 +154,11 @@ export default function LandingPage({ onGetStarted, onViewSampleData }: LandingP
           <div className="text-center">
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900  mb-4 sm:mb-6 animate-fade-in-up leading-tight">
               <span className="block sm:inline gradient-text-animated">
-                Visualize fast. Decide faster.
+                Spreadsheet to chart. No AI. No backend.
               </span>
             </h1>
             <p className="text-base sm:text-lg lg:text-xl text-gray-600  mb-6 sm:mb-8 max-w-3xl mx-auto animate-fade-in-up animation-delay-200 px-2">
-              Create stunning, interactive visualizations from your CSV data in seconds. 
-              No coding, no backend, no hassle - just upload, customize, and export.
+              Upload CSV or Excel, map columns to chart roles, overlay reference ranges, filter by date or value, and export publication-ready charts. Everything runs in your browser.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center animate-fade-in-up animation-delay-400 px-4">
               <button
@@ -244,9 +243,9 @@ export default function LandingPage({ onGetStarted, onViewSampleData }: LandingP
               <div className="w-12 h-12 sm:w-16 sm:h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-xl sm:text-2xl">📁</span>
               </div>
-              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">1. Upload Your Data</h3>
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">1. Upload</h3>
               <p className="text-sm sm:text-base text-gray-600">
-                Drag and drop your CSV file or enter data manually in our interactive table.
+                Drop a CSV or Excel file. Multi-sheet workbooks get a sheet picker. Data never leaves your browser.
               </p>
             </div>
             
@@ -254,9 +253,9 @@ export default function LandingPage({ onGetStarted, onViewSampleData }: LandingP
               <div className="w-12 h-12 sm:w-16 sm:h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-xl sm:text-2xl">🎨</span>
               </div>
-              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">2. Customize Your Chart</h3>
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">2. Map Columns</h3>
               <p className="text-sm sm:text-base text-gray-600">
-                Choose chart type, colors, titles, and axis labels to match your needs.
+                Assign roles — X-Axis, Value Series, Reference Lower/Upper. Add units and display names.
               </p>
             </div>
             
@@ -264,9 +263,9 @@ export default function LandingPage({ onGetStarted, onViewSampleData }: LandingP
               <div className="w-12 h-12 sm:w-16 sm:h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-xl sm:text-2xl">💾</span>
               </div>
-              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">3. Export & Share</h3>
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">3. Chart & Export</h3>
               <p className="text-sm sm:text-base text-gray-600">
-                Download your chart as PNG, SVG, or PDF and share with your team.
+                Chart with reference range bands, apply date/value filters, export PNG, SVG, or PDF.
               </p>
             </div>
           </div>
