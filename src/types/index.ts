@@ -1,25 +1,97 @@
+// ─── Column ───────────────────────────────────────────────────────────────────
+
+export type ColumnType = 'numeric' | 'categorical' | 'date';
+
+export type ColumnRole =
+  | 'x-axis'    // time or category axis
+  | 'y-series'  // value to plot
+  | 'ref-lower' // reference range lower bound
+  | 'ref-upper' // reference range upper bound
+  | 'label'     // extra tooltip field (e.g. "source", "lab")
+  | 'ignore';   // excluded from chart
+
+export interface ColumnInfo {
+  name: string;
+  type: ColumnType;
+  role: ColumnRole;
+  index: number;
+  unit?: string;        // e.g. "ng/dL", "mIU/L"
+  displayName?: string; // override header in chart labels
+}
+
+// ─── Dataset (parsed file) ────────────────────────────────────────────────────
+
 export interface DataPoint {
-  [key: string]: string | number | Date;
+  [key: string]: string | number | null;
+}
+
+export interface DataSource {
+  filename: string;
+  format: 'csv' | 'xlsx';
+  sheetName?: string;
 }
 
 export interface ParsedData {
   data: DataPoint[];
   columns: ColumnInfo[];
   headers: string[];
+  source?: DataSource;
 }
+
+// ─── Sorting ──────────────────────────────────────────────────────────────────
 
 export interface SortConfig {
   column: string;
   direction: 'asc' | 'desc';
 }
 
-export interface ColumnInfo {
-  name: string;
-  type: 'numeric' | 'categorical' | 'date';
-  index: number;
+// ─── Filters ──────────────────────────────────────────────────────────────────
+
+export interface DateRangeFilter {
+  from?: string; // ISO date string
+  to?: string;
 }
 
-export type ChartType = 'bar' | 'line' | 'pie' | 'scatter' | 'doughnut' | 'polarArea' | 'radar' | 'bubble';
+export interface ValueRangeFilter {
+  min?: number;
+  max?: number;
+}
+
+export interface CategoryFilter {
+  include: string[];
+}
+
+export type FilterValue = DateRangeFilter | ValueRangeFilter | CategoryFilter;
+
+export interface ActiveFilter {
+  id: string;
+  column: string;
+  type: 'date-range' | 'value-range' | 'category';
+  value: FilterValue;
+}
+
+// ─── Reference Ranges ─────────────────────────────────────────────────────────
+
+export interface ReferenceRange {
+  id: string;
+  seriesColumn: string;  // which y-series this band applies to
+  lowerColumn?: string;  // data column with lower bound per row
+  upperColumn?: string;  // data column with upper bound per row
+  label?: string;        // e.g. "Normal Range"
+  fillColor: string;     // e.g. "rgba(34, 197, 94, 0.15)"
+}
+
+// ─── Chart Config ─────────────────────────────────────────────────────────────
+
+export type ChartType =
+  | 'bar'
+  | 'line'
+  | 'scatter'
+  | 'pie'
+  | 'doughnut'
+  | 'polarArea'
+  | 'radar'
+  | 'bubble';
 
 export interface AxisConfig {
   id: string;
@@ -28,6 +100,7 @@ export interface AxisConfig {
   position: 'left' | 'right' | 'top' | 'bottom';
   type: 'linear' | 'logarithmic' | 'category' | 'time';
   display: boolean;
+  unit?: string; // appended to axis title: "T3 (ng/dL)"
   grid?: {
     display: boolean;
     color?: string;
@@ -48,7 +121,7 @@ export interface DatasetConfig {
   color: string;
   type?: 'bar' | 'line' | 'scatter';
   fill?: boolean;
-  tension?: number; // for line charts
+  tension?: number;
 }
 
 export interface ChartConfig {
@@ -57,10 +130,9 @@ export interface ChartConfig {
   xAxes: AxisConfig[];
   yAxes: AxisConfig[];
   datasets: DatasetConfig[];
+  referenceRanges: ReferenceRange[];
+  filters: ActiveFilter[];
   colors: string[];
-  // Legacy support - will be mapped to xAxes[0] and yAxes[0]
-  xAxis?: string;
-  yAxis?: string;
 }
 
 export interface ExportOptions {
