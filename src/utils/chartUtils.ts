@@ -10,6 +10,7 @@ import {
   DateRangeFilter,
   ValueRangeFilter,
   CategoryFilter,
+  RangeStatus,
 } from '@/types';
 
 export const CHART_TYPES: { value: ChartType; label: string }[] = [
@@ -33,6 +34,44 @@ export const DEFAULT_COLORS = [
   '#06B6D4', // cyan
   '#84CC16', // lime
 ];
+
+// ─── Name-aware reference column matching ─────────────────────────────────────
+
+/**
+ * Normalize a column name for matching: strip whitespace, underscores, hyphens,
+ * dots, and lowercase.
+ */
+function normalizeName(name: string): string {
+  return name.toLowerCase().replace(/[\s_\-\.]/g, '');
+}
+
+/**
+ * Find the ref-lower or ref-upper column whose name best matches a y-series
+ * column name. Matching strategy:
+ *   1. The ref column's normalized name contains the series' normalized name
+ *   2. If multiple matches, prefer the one with the shortest normalized name
+ *      (closest match)
+ *   3. If no match found, return undefined
+ */
+export function matchRefColumn(
+  seriesName: string,
+  refCols: ColumnInfo[]
+): ColumnInfo | undefined {
+  const normalizedSeries = normalizeName(seriesName);
+  if (!normalizedSeries) return undefined;
+
+  const matches = refCols.filter((col) => {
+    const normalizedRef = normalizeName(col.name);
+    return normalizedRef.includes(normalizedSeries);
+  });
+
+  if (matches.length === 0) return undefined;
+  if (matches.length === 1) return matches[0];
+
+  // Multiple matches — prefer shortest name (closest to exact match)
+  matches.sort((a, b) => normalizeName(a.name).length - normalizeName(b.name).length);
+  return matches[0];
+}
 
 // ─── Build default chart config from mapped column roles ──────────────────────
 
@@ -86,15 +125,22 @@ export function createDefaultChartConfig(
   }));
 
   // Auto-build reference ranges from ref-lower/ref-upper columns
-  // Pair them by position: first lower with first upper, etc.
-  const referenceRanges: ReferenceRange[] = ySeries.slice(0, refLowerCols.length || refUpperCols.length).map((seriesCol, i) => ({
-    id: `ref-${i}`,
-    seriesColumn: seriesCol.name,
-    lowerColumn: refLowerCols[i]?.name,
-    upperColumn: refUpperCols[i]?.name,
-    label: 'Reference Range',
-    fillColor: 'rgba(34, 197, 94, 0.12)',
-  }));
+  // Match by column name: find ref columns whose name contains the series name
+  const referenceRanges: ReferenceRange[] = [];
+  for (const seriesCol of ySeries) {
+    const lowerCol = matchRefColumn(seriesCol.name, refLowerCols);
+    const upperCol = matchRefColumn(seriesCol.name, refUpperCols);
+    if (lowerCol || upperCol) {
+      referenceRanges.push({
+        id: `ref-${referenceRanges.length}`,
+        seriesColumn: seriesCol.name,
+        lowerColumn: lowerCol?.name,
+        upperColumn: upperCol?.name,
+        label: 'Reference Range',
+        fillColor: 'rgba(34, 197, 94, 0.12)',
+      });
+    }
+  }
 
   return {
     type: chartType,
@@ -456,4 +502,29 @@ export function validateChartConfig(
   });
 
   return { isValid: errors.length === 0, errors };
+}
+
+// ─── Row-level range status ───────────────────────────────────────────────────
+
+/**
+ * Determine whether a value falls below, within, or above a reference range.
+ *
+ * Returns 'unknown' if the value or both bounds are null/undefined.
+ * This is descriptive only — not a diagnosis.
+ */
+export function getRangeStatus(
+  value: number | null | undefined,
+  lower: number | null | undefined,
+  upper: number | null | undefined
+): RangeStatus {
+  if (value === null || value === undefined || Number.isNaN(value)) return 'unknown';
+  if (lower == null && upper == null) return 'unknown';
+
+  if (lower !== null && lower !== undefined && value < lower) return 'below';
+  if (upper !== null && upper !== undefined && value > upper) return 'above';
+
+  // If we have at least one bound and the value is not outside it, it's within
+  if (lower !== null && lower !== undefined || upper !== null && upper !== undefined) return 'within';
+
+  return 'unknown';
 }

@@ -27,8 +27,10 @@ export interface DataPoint {
 
 export interface DataSource {
   filename: string;
-  format: 'csv' | 'xlsx';
+  format: 'csv' | 'xlsx' | 'pdf';
   sheetName?: string;
+  pageCount?: number;
+  extractionMethod?: 'text' | 'ocr';
 }
 
 export interface ParsedData {
@@ -37,6 +39,10 @@ export interface ParsedData {
   headers: string[];
   source?: DataSource;
 }
+
+// ─── Range Status ─────────────────────────────────────────────────────────────
+
+export type RangeStatus = 'below' | 'within' | 'above' | 'unknown';
 
 // ─── Sorting ──────────────────────────────────────────────────────────────────
 

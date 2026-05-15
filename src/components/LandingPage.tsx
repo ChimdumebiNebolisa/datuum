@@ -15,8 +15,8 @@ export default function LandingPage({ onGetStarted, onViewSampleData }: LandingP
   const features = [
     {
       icon: '📂',
-      title: 'CSV & Excel Upload',
-      description: 'Upload .csv, .xlsx, or .xls files. Multi-sheet Excel workbooks are supported — choose your sheet before import.'
+      title: 'CSV, Excel & PDF Upload',
+      description: 'Upload .csv, .xlsx, .xls, or .pdf files. Multi-sheet workbooks and text-based PDFs are supported — scanned PDFs use OCR as a fallback.'
     },
     {
       icon: '🗺️',
@@ -158,7 +158,7 @@ export default function LandingPage({ onGetStarted, onViewSampleData }: LandingP
               </span>
             </h1>
             <p className="text-base sm:text-lg lg:text-xl text-gray-600  mb-6 sm:mb-8 max-w-3xl mx-auto animate-fade-in-up animation-delay-200 px-2">
-              Upload CSV or Excel, map columns to chart roles, overlay reference ranges, filter by date or value, and export publication-ready charts. Everything runs in your browser.
+              Upload CSV, Excel, or PDF, map columns to chart roles, overlay reference ranges, filter by date or value, and export publication-ready charts. Everything runs in your browser.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center animate-fade-in-up animation-delay-400 px-4">
               <button
@@ -245,7 +245,7 @@ export default function LandingPage({ onGetStarted, onViewSampleData }: LandingP
               </div>
               <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">1. Upload</h3>
               <p className="text-sm sm:text-base text-gray-600">
-                Drop a CSV or Excel file. Multi-sheet workbooks get a sheet picker. Data never leaves your browser.
+                Drop a CSV, Excel, or PDF file. Multi-sheet workbooks get a sheet picker. PDF text is extracted automatically. Data never leaves your browser.
               </p>
             </div>
             

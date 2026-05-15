@@ -4,6 +4,7 @@ import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { ParsedData } from '@/types';
 import { parseFile, getSheetNames } from '@/parsers';
+import type { PdfParseProgress } from '@/parsers';
 import { validateCSV } from '@/parsers/csvParser';
 import SheetSelector from './SheetSelector';
 
@@ -14,17 +15,35 @@ interface FileUploadProps {
 
 type UploadState = 'idle' | 'loading' | 'selecting-sheet';
 
+const PARSING_MESSAGES: Record<string, string> = {
+  default: 'Parsing your file, please wait',
+  csv: 'Parsing spreadsheet…',
+  xlsx: 'Parsing spreadsheet…',
+  xls: 'Parsing spreadsheet…',
+  pdf: 'Extracting PDF text…',
+};
+
 export default function FileUpload({ onDataParsed, onError }: FileUploadProps) {
   const [uploadState, setUploadState] = useState<UploadState>('idle');
   const [pendingFile, setPendingFile] = useState<File | null>(null);
   const [sheets, setSheets] = useState<string[]>([]);
   const [showBadType, setShowBadType] = useState(false);
+  const [parsingMessage, setParsingMessage] = useState('');
 
   const processFile = useCallback(
     async (file: File, sheetName?: string) => {
       setUploadState('loading');
+      const ext = file.name.split('.').pop()?.toLowerCase() ?? '';
+      setParsingMessage(PARSING_MESSAGES[ext] ?? PARSING_MESSAGES.default);
       try {
-        const parsed = await parseFile(file, { sheetName });
+        const pdfOptions = ext === 'pdf' ? {
+          pdf: {
+            onProgress: (progress: PdfParseProgress) => {
+              setParsingMessage(progress.message);
+            },
+          },
+        } : undefined;
+        const parsed = await parseFile(file, { sheetName, ...pdfOptions });
         const validation = validateCSV(parsed);
         if (!validation.isValid) {
           onError(validation.errors.join(' • '));
@@ -87,6 +106,7 @@ export default function FileUpload({ onDataParsed, onError }: FileUploadProps) {
       'text/csv': ['.csv'],
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['.xlsx'],
       'application/vnd.ms-excel': ['.xls', '.csv'],
+      'application/pdf': ['.pdf'],
     },
     multiple: false,
     disabled: uploadState !== 'idle',
@@ -114,7 +134,7 @@ export default function FileUpload({ onDataParsed, onError }: FileUploadProps) {
               </h3>
               <p className="text-sm text-gray-500 mt-1">
                 {isLoading
-                  ? 'Parsing your file, please wait'
+                  ? parsingMessage
                   : 'Drag & drop, or click to browse'}
               </p>
             </div>
@@ -122,6 +142,7 @@ export default function FileUpload({ onDataParsed, onError }: FileUploadProps) {
               <span className="px-2 py-1 bg-gray-100 rounded font-mono">.csv</span>
               <span className="px-2 py-1 bg-gray-100 rounded font-mono">.xlsx</span>
               <span className="px-2 py-1 bg-gray-100 rounded font-mono">.xls</span>
+              <span className="px-2 py-1 bg-gray-100 rounded font-mono">.pdf</span>
               <span className="text-gray-300">•</span>
               <span>up to 10 MB</span>
             </div>
@@ -132,7 +153,7 @@ export default function FileUpload({ onDataParsed, onError }: FileUploadProps) {
           <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700 flex items-start gap-2">
             <span className="mt-0.5">⚠️</span>
             <span>
-              Unsupported file type. Please upload a <strong>.csv</strong>, <strong>.xlsx</strong>, or <strong>.xls</strong> file.
+              Unsupported file type. Please upload a <strong>.csv</strong>, <strong>.xlsx</strong>, <strong>.xls</strong>, or <strong>.pdf</strong> file.
               <button className="ml-2 underline" onClick={() => setShowBadType(false)}>Dismiss</button>
             </span>
           </div>

@@ -9,12 +9,12 @@ export function suggestRole(name: string, type: ColumnType, allColumns: { name: 
   if (type === 'date') return 'x-axis';
 
   // Reference lower bound patterns
-  if (/lower|reflo|refmin|lowerlimit|lowerbound|lowref|llimit|lowerref|lownormal/.test(lower)) return 'ref-lower';
-  if (/^(min|minimum)$/.test(lower)) return 'ref-lower';
+  if (/lower|reflo|refmin|lowerlimit|lowerbound|lowref|llimit|lowerref|lownormal|referencemin/.test(lower)) return 'ref-lower';
+  if (/^(min|minimum|low)$/.test(lower)) return 'ref-lower';
 
   // Reference upper bound patterns
-  if (/upper|refhi|refmax|upperlimit|upperbound|upref|ulimit|upperref|upnormal/.test(lower)) return 'ref-upper';
-  if (/^(max|maximum)$/.test(lower)) return 'ref-upper';
+  if (/upper|refhi|refmax|upperlimit|upperbound|upref|ulimit|upperref|upnormal|referencemax/.test(lower)) return 'ref-upper';
+  if (/^(max|maximum|high)$/.test(lower)) return 'ref-upper';
 
   // Label / metadata patterns
   if (/source|lab|laboratory|notes?|comment|remark|method|instrument|analyst/.test(lower)) return 'label';

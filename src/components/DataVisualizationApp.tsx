@@ -1,6 +1,6 @@
 'use client';
 
-import { useReducer } from 'react';
+import { useReducer, useState } from 'react';
 import { ParsedData, ChartConfig, ColumnInfo } from '@/types';
 import { createDefaultChartConfig } from '@/utils/chartUtils';
 import FileUpload from '@/components/upload/FileUpload';
@@ -89,6 +89,7 @@ interface DataVisualizationAppProps {
 
 export default function DataVisualizationApp({ onBackToLanding }: DataVisualizationAppProps) {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
+  const [chartViewMode, setChartViewMode] = useState<'combined' | 'per-marker'>('per-marker');
   const { step, parsedData, mappedColumns, chartConfig, error } = state;
 
   const handleDataParsed = (data: ParsedData) => {
@@ -199,10 +200,10 @@ export default function DataVisualizationApp({ onBackToLanding }: DataVisualizat
           <div className="text-center">
             <div className="mb-8">
               <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                Upload a spreadsheet
+                Upload a file
               </h2>
               <p className="text-gray-500 text-sm max-w-lg mx-auto">
-                CSV or Excel files. No AI, no backend — everything runs in your browser.
+                CSV, Excel, or PDF files. No AI, no backend — everything runs in your browser.
               </p>
             </div>
             <FileUpload
@@ -218,6 +219,23 @@ export default function DataVisualizationApp({ onBackToLanding }: DataVisualizat
         {/* Preview step */}
         {step === 'preview' && effectiveData && (
           <div className="space-y-4">
+            {effectiveData.source?.extractionMethod === 'ocr' && (
+              <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-800 flex items-start gap-2">
+                <span className="mt-0.5">⚠️</span>
+                <span>
+                  <strong>OCR extraction:</strong> This PDF was processed using optical character recognition.
+                  The extracted data may contain errors. Please review and correct values before building a chart.
+                </span>
+              </div>
+            )}
+            {effectiveData.source?.format === 'pdf' && effectiveData.source?.extractionMethod === 'text' && (
+              <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-700 flex items-start gap-2">
+                <span className="mt-0.5">ℹ️</span>
+                <span>
+                  Data extracted from PDF text. Table reconstruction is heuristic — please verify the data is correct.
+                </span>
+              </div>
+            )}
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-base font-semibold text-gray-900">Data Preview</h3>
@@ -264,11 +282,53 @@ export default function DataVisualizationApp({ onBackToLanding }: DataVisualizat
 
             {/* Chart + export */}
             <div className="lg:col-span-2 space-y-4">
-              <ChartRenderer data={effectiveData} config={chartConfig} />
-              <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
-                <ExportControls chartType={chartConfig.type} chartTitle={chartConfig.title} sourceInfo={sourceLabel ?? undefined} />
-              </div>
-              <p className="text-xs text-gray-400 italic text-center">
+              {chartConfig.datasets.length > 1 && (
+                <div className="flex items-center justify-end space-x-2 bg-white p-2 rounded-xl border border-gray-200 shadow-sm">
+                  <span className="text-sm text-gray-600 font-medium mr-2">View:</span>
+                  <button
+                    onClick={() => setChartViewMode('combined')}
+                    className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${chartViewMode === 'combined' ? 'bg-blue-100 text-blue-700 font-semibold' : 'text-gray-600 hover:bg-gray-100'}`}
+                  >
+                    Combined
+                  </button>
+                  <button
+                    onClick={() => setChartViewMode('per-marker')}
+                    className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${chartViewMode === 'per-marker' ? 'bg-blue-100 text-blue-700 font-semibold' : 'text-gray-600 hover:bg-gray-100'}`}
+                  >
+                    Per Marker
+                  </button>
+                </div>
+              )}
+
+              {chartViewMode === 'combined' || chartConfig.datasets.length <= 1 ? (
+                <>
+                  <ChartRenderer data={effectiveData} config={chartConfig} />
+                  <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
+                    <ExportControls chartType={chartConfig.type} chartTitle={chartConfig.title} sourceInfo={sourceLabel ?? undefined} />
+                  </div>
+                </>
+              ) : (
+                <div className="space-y-8">
+                  {chartConfig.datasets.map((ds) => {
+                    const markerConfig = {
+                      ...chartConfig,
+                      title: ds.label,
+                      datasets: [ds],
+                      referenceRanges: chartConfig.referenceRanges.filter(r => r.seriesColumn === ds.column)
+                    };
+                    return (
+                      <div key={ds.column} className="space-y-4 pt-4 border-t border-gray-200 first:border-0 first:pt-0">
+                        <ChartRenderer data={effectiveData} config={markerConfig} />
+                        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
+                          <ExportControls chartType={markerConfig.type} chartTitle={markerConfig.title} sourceInfo={sourceLabel ?? undefined} />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              <p className="text-xs text-gray-400 italic text-center mt-4">
                 This tool visualizes uploaded data and does not provide medical advice.
               </p>
             </div>

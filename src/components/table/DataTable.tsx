@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { ParsedData, DataPoint, SortConfig } from '@/types';
 import { sortData } from '@/utils/csvParser';
+import { matchRefColumn, getRangeStatus } from '@/utils/chartUtils';
 import DataSearchFilter from './DataSearchFilter';
 
 interface DataTableProps {
@@ -103,6 +104,55 @@ export default function DataTable({ data, onDataChange }: DataTableProps) {
 
   const handleFilteredData = (filteredData: ParsedData) => {
     setDisplayData(filteredData);
+  };
+
+  const hasReferenceRanges = data.columns.some(c => c.role === 'ref-lower' || c.role === 'ref-upper') 
+    && data.columns.some(c => c.role === 'y-series');
+
+  const getRowStatusSummary = (row: DataPoint): string | null => {
+    if (!hasReferenceRanges) return null;
+
+    const ySeriesCols = data.columns.filter(c => c.role === 'y-series');
+    const refLowerCols = data.columns.filter(c => c.role === 'ref-lower');
+    const refUpperCols = data.columns.filter(c => c.role === 'ref-upper');
+
+    let hasBelow = false;
+    let hasAbove = false;
+    let hasWithin = false;
+    let mappedCount = 0;
+
+    for (const series of ySeriesCols) {
+      const lower = matchRefColumn(series.name, refLowerCols);
+      const upper = matchRefColumn(series.name, refUpperCols);
+      if (!lower && !upper) continue;
+      
+      mappedCount++;
+
+      const val = typeof row[series.name] === 'number' ? row[series.name] as number : null;
+      const lowerVal = lower && typeof row[lower.name] === 'number' ? row[lower.name] as number : null;
+      const upperVal = upper && typeof row[upper.name] === 'number' ? row[upper.name] as number : null;
+
+      const status = getRangeStatus(val, lowerVal, upperVal);
+      if (status === 'below') hasBelow = true;
+      if (status === 'above') hasAbove = true;
+      if (status === 'within') hasWithin = true;
+    }
+
+    if (mappedCount === 0) return null;
+
+    if (hasBelow && hasAbove) return 'Mixed out of range';
+    if (hasBelow) return 'Below range';
+    if (hasAbove) return 'Above range';
+    if (hasWithin) return 'Within range';
+    return 'Unknown';
+  };
+
+  const getStatusBadgeClass = (statusLabel: string) => {
+    if (statusLabel === 'Within range') return 'bg-green-100 text-green-800 border-green-200';
+    if (statusLabel === 'Below range') return 'bg-amber-100 text-amber-800 border-amber-200';
+    if (statusLabel === 'Above range') return 'bg-red-100 text-red-800 border-red-200';
+    if (statusLabel === 'Mixed out of range') return 'bg-orange-100 text-orange-800 border-orange-200';
+    return 'bg-gray-100 text-gray-800 border-gray-200';
   };
 
   return (
@@ -221,6 +271,11 @@ export default function DataTable({ data, onDataChange }: DataTableProps) {
                   </span>
                 </th>
               ))}
+              {hasReferenceRanges && (
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider" title="Descriptive only. Not medical advice.">
+                  Reference Status
+                </th>
+              )}
               <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700  uppercase tracking-wider">
                 Actions
               </th>
@@ -254,6 +309,19 @@ export default function DataTable({ data, onDataChange }: DataTableProps) {
                     )}
                   </td>
                 ))}
+                {hasReferenceRanges && (
+                  <td className="px-4 py-3 whitespace-nowrap text-sm">
+                    {(() => {
+                      const summary = getRowStatusSummary(row);
+                      if (!summary) return <span className="text-gray-400">-</span>;
+                      return (
+                        <span className={`px-2 py-1 border rounded text-xs font-medium ${getStatusBadgeClass(summary)}`} title="Descriptive only. Not medical advice.">
+                          {summary}
+                        </span>
+                      );
+                    })()}
+                  </td>
+                )}
                 <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600 ">
                   <button
                     onClick={() => deleteRow(rowIndex)}

@@ -160,3 +160,147 @@ describe('getReferenceRangeDatasets', () => {
     expect(datasets[0].data[1]).toBeNull();
   });
 });
+
+// ─── matchRefColumn (name-aware reference column matching) ────────────────────
+
+import { matchRefColumn, getRangeStatus } from '../../utils/chartUtils';
+import type { ColumnInfo } from '../../types';
+
+describe('matchRefColumn', () => {
+  const makeCol = (name: string): ColumnInfo => ({
+    name,
+    type: 'numeric',
+    role: 'ref-lower',
+    index: 0,
+  });
+
+  it('matches TSH_Lower to TSH', () => {
+    const refCols = [makeCol('TSH_Lower'), makeCol('T3_Lower'), makeCol('T4_Lower')];
+    expect(matchRefColumn('TSH', refCols)?.name).toBe('TSH_Lower');
+  });
+
+  it('matches T3_Lower to T3', () => {
+    const refCols = [makeCol('TSH_Lower'), makeCol('T3_Lower'), makeCol('T4_Lower')];
+    expect(matchRefColumn('T3', refCols)?.name).toBe('T3_Lower');
+  });
+
+  it('matches T4_Lower to T4', () => {
+    const refCols = [makeCol('TSH_Lower'), makeCol('T3_Lower'), makeCol('T4_Lower')];
+    expect(matchRefColumn('T4', refCols)?.name).toBe('T4_Lower');
+  });
+
+  it('matches "Lower Limit T3" to T3', () => {
+    const refCols = [makeCol('Lower Limit T3'), makeCol('Lower Limit T4')];
+    expect(matchRefColumn('T3', refCols)?.name).toBe('Lower Limit T3');
+  });
+
+  it('returns undefined when no match', () => {
+    const refCols = [makeCol('TSH_Lower')];
+    expect(matchRefColumn('Hemoglobin', refCols)).toBeUndefined();
+  });
+
+  it('returns undefined for empty series name', () => {
+    const refCols = [makeCol('TSH_Lower')];
+    expect(matchRefColumn('', refCols)).toBeUndefined();
+  });
+
+  it('prefers the shortest matching name', () => {
+    const refCols = [makeCol('TSH_Lower_Ref'), makeCol('TSH_Lower')];
+    expect(matchRefColumn('TSH', refCols)?.name).toBe('TSH_Lower');
+  });
+});
+
+// ─── getRangeStatus ───────────────────────────────────────────────────────────
+
+describe('getRangeStatus', () => {
+  it('returns "below" when value < lower', () => {
+    expect(getRangeStatus(0.3, 0.5, 4.5)).toBe('below');
+  });
+
+  it('returns "above" when value > upper', () => {
+    expect(getRangeStatus(5.0, 0.5, 4.5)).toBe('above');
+  });
+
+  it('returns "within" when value is in range', () => {
+    expect(getRangeStatus(2.5, 0.5, 4.5)).toBe('within');
+  });
+
+  it('returns "within" at exact lower bound', () => {
+    expect(getRangeStatus(0.5, 0.5, 4.5)).toBe('within');
+  });
+
+  it('returns "within" at exact upper bound', () => {
+    expect(getRangeStatus(4.5, 0.5, 4.5)).toBe('within');
+  });
+
+  it('returns "within" with only lower bound', () => {
+    expect(getRangeStatus(1.0, 0.5, null)).toBe('within');
+  });
+
+  it('returns "within" with only upper bound', () => {
+    expect(getRangeStatus(3.0, null, 4.5)).toBe('within');
+  });
+
+  it('returns "unknown" for null value', () => {
+    expect(getRangeStatus(null, 0.5, 4.5)).toBe('unknown');
+  });
+
+  it('returns "unknown" for undefined value', () => {
+    expect(getRangeStatus(undefined, 0.5, 4.5)).toBe('unknown');
+  });
+
+  it('returns "unknown" when both bounds are null', () => {
+    expect(getRangeStatus(2.5, null, null)).toBe('unknown');
+  });
+
+  it('returns "unknown" when value is NaN', () => {
+    expect(getRangeStatus(NaN, 0.5, 4.5)).toBe('unknown');
+  });
+});
+
+// ─── createDefaultChartConfig name-aware pairing ──────────────────────────────
+
+import { createDefaultChartConfig } from '../../utils/chartUtils';
+
+describe('createDefaultChartConfig (name-aware reference ranges)', () => {
+  it('pairs TSH with TSH_Lower/TSH_Upper by name', () => {
+    const columns: ColumnInfo[] = [
+      { name: 'Date', type: 'date', role: 'x-axis', index: 0 },
+      { name: 'TSH', type: 'numeric', role: 'y-series', index: 1 },
+      { name: 'T3', type: 'numeric', role: 'y-series', index: 2 },
+      { name: 'TSH_Lower', type: 'numeric', role: 'ref-lower', index: 3 },
+      { name: 'TSH_Upper', type: 'numeric', role: 'ref-upper', index: 4 },
+      { name: 'T3_Lower', type: 'numeric', role: 'ref-lower', index: 5 },
+      { name: 'T3_Upper', type: 'numeric', role: 'ref-upper', index: 6 },
+    ];
+    const data: DataPoint[] = [{ Date: '2024-01-01', TSH: 2.1, T3: 1.4, TSH_Lower: 0.5, TSH_Upper: 4.5, T3_Lower: 0.8, T3_Upper: 2.0 }];
+
+    const config = createDefaultChartConfig(data, columns);
+
+    // Should have 2 reference ranges
+    expect(config.referenceRanges).toHaveLength(2);
+
+    // TSH → TSH_Lower / TSH_Upper
+    const tshRef = config.referenceRanges.find(r => r.seriesColumn === 'TSH');
+    expect(tshRef).toBeDefined();
+    expect(tshRef!.lowerColumn).toBe('TSH_Lower');
+    expect(tshRef!.upperColumn).toBe('TSH_Upper');
+
+    // T3 → T3_Lower / T3_Upper
+    const t3Ref = config.referenceRanges.find(r => r.seriesColumn === 'T3');
+    expect(t3Ref).toBeDefined();
+    expect(t3Ref!.lowerColumn).toBe('T3_Lower');
+    expect(t3Ref!.upperColumn).toBe('T3_Upper');
+  });
+
+  it('creates no reference ranges when no ref columns match', () => {
+    const columns: ColumnInfo[] = [
+      { name: 'Date', type: 'date', role: 'x-axis', index: 0 },
+      { name: 'Revenue', type: 'numeric', role: 'y-series', index: 1 },
+    ];
+    const data: DataPoint[] = [{ Date: '2024-01-01', Revenue: 1000 }];
+
+    const config = createDefaultChartConfig(data, columns);
+    expect(config.referenceRanges).toHaveLength(0);
+  });
+});

@@ -117,4 +117,21 @@ describe('suggestRole', () => {
     ];
     expect(suggestRole('Region', 'categorical', cols)).toBe('ignore');
   });
+
+  // New patterns: standalone low/high, reference min/max
+  it('suggests ref-lower for standalone "low"', () => {
+    expect(suggestRole('Low', 'numeric', allCols('Low', 'numeric'))).toBe('ref-lower');
+  });
+
+  it('suggests ref-upper for standalone "high"', () => {
+    expect(suggestRole('High', 'numeric', allCols('High', 'numeric'))).toBe('ref-upper');
+  });
+
+  it('suggests ref-lower for "Reference Min"', () => {
+    expect(suggestRole('Reference Min', 'numeric', allCols('Reference Min', 'numeric'))).toBe('ref-lower');
+  });
+
+  it('suggests ref-upper for "Reference Max"', () => {
+    expect(suggestRole('Reference Max', 'numeric', allCols('Reference Max', 'numeric'))).toBe('ref-upper');
+  });
 });
