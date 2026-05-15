@@ -20,7 +20,7 @@
     "date-fns": "^4.1.0",
     "html2canvas": "^1.4.1",
     "jspdf": "^3.0.3",
-    "next": "15.5.4",
+    "next": "15.5.9",
     "papaparse": "^5.5.3",
     "pdfjs-dist": "^4.10.38",
     "react": "19.1.0",
